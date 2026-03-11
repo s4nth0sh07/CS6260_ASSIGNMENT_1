@@ -53,7 +53,6 @@
    (at ?airplane ?loc-from)
   :effect
    (and (not (at ?airplane ?loc-from)) (at ?airplane ?loc-to)))
-)
 
 (:action DRIVE-SEMI 
   :parameters (?semi - semi ?depo-start - depot ?depo-dest - depot)
@@ -78,3 +77,6 @@
   :effect
    (and (not (in ?pkg ?semi)) (at ?pkg ?depo))
 )
+
+)
+
