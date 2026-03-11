@@ -5,17 +5,20 @@
   (:requirements :strips :typing) 
   (:types truck
           airplane - vehicle
+          semi - vehicle
           package
           vehicle - physobj
           airport
           location - place
+          depot - place
           city
           place 
           physobj - object)
   
   (:predicates 	(in-city ?loc - place ?city - city)
 		(at ?obj - physobj ?loc - place)
-		(in ?pkg - package ?veh - vehicle))
+		(in ?pkg - package ?veh - vehicle)
+        (highway ?depo1 - depot ?depo2 - depot))
   
 (:action LOAD-TRUCK
    :parameters    (?pkg - package ?truck - truck ?loc - place)
@@ -50,4 +53,28 @@
    (at ?airplane ?loc-from)
   :effect
    (and (not (at ?airplane ?loc-from)) (at ?airplane ?loc-to)))
+)
+
+(:action DRIVE-SEMI 
+  :parameters (?semi - semi ?depo-start - depot ?depo-dest - depot)
+  :precondition 
+   (and (at ?semi ?depo-start) (highway ?depo-start ?depo-dest))
+  :effect
+   (and (not (at ?semi ?depo-start)) (at ?semi ?depo-dest))
+)
+
+(:action LOAD-SEMI
+  :parameters (?pkg - package ?semi - semi ?depo - depot)
+  :precondition
+   (and (at ?semi ?depo) (at ?pkg ?depo))
+  :effect
+   (and (in ?pkg ?semi) (not (at ?pkg ?depo))) 
+)
+
+(:action UNLOAD-SEMI
+  :parameters (?pkg - package ?semi - semi ?depo - depot)
+  :precondition
+   (and (at ?semi ?depo) (in ?pkg ?semi))
+  :effect
+   (and (not (in ?pkg ?semi)) (at ?pkg ?depo))
 )
